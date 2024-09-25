@@ -1,0 +1,84 @@
+<html>
+<head>
+<style>
+.yagmur{width:100% ; height:100% ; position:fixed ; left:0 ; top:0px ; z-index:-5;  }
+</style>
+<script type="text/javascript">
+function baslangic ()
+{
+window.requestAnimFrame = (function() {
+return window.requestAnimationFrame ||
+function(callback) {
+window.setTimeout(callback, 1000 / 60);
+};
+})();
+
+
+var canvas = document.getElementById("yagmur");
+canvas.width = window.innerWidth ;
+canvas.height = window.innerHeight * 1.5;
+
+var c = canvas.getContext("2d"),
+genislik = canvas.width,
+yukseklik = canvas.height;
+
+var yagmur_number = 150,
+yagmur_array = [];
+
+function yagmur() {
+this.x = Math.random() * genislik;
+this.y = Math.random() * yukseklik;
+this.vector_x = Math.random() - 15.5 > 0 ? Math.random() : -Math.random();
+this.vector_y = Math.random() / 2;
+this.line_length = Math.random() * 5 + 20;
+}
+
+yagmur.prototype.update = function() {
+
+this.x += this.vector_x;
+this.y += this.vector_y * this.line_length;
+
+if (this.x > genislik || this.x < 0) {
+this.x = Math.random() * genislik;
+}
+if (this.y > yukseklik) {
+this.y = 0;
+}
+}
+
+function init() {
+c.fillStyle = "white";
+c.strokeStyle = "red";
+c.lineWidth = 5;
+for (var h = 0; h < yagmur_number; h++) {
+yagmur_array.push(new yagmur())
+}
+}
+init();
+start();
+
+function start() {
+c.fillRect(0, 0 , genislik, yukseklik ,);
+for (var h = 0; h < yagmur_array.length; h++) {
+c.beginPath();
+c.moveTo(yagmur_array[h].x, yagmur_array[h].y);
+c.lineTo(yagmur_array[h].x + yagmur_array[h].vector_x, yagmur_array[h].y + yagmur_array[h].vector_y * yagmur_array[h].line_length);
+
+yagmur_array[h].update();
+c.stroke();
+}
+window.requestAnimFrame(start);
+}
+}
+
+</script>
+
+</head>
+<body style="background:#1a1a1a" id="body" onload="baslangic ()">
+
+<canvas id="yagmur" class="yagmur"></canvas>
+
+<!-- https://www.youtube.com/@TahaKeskin -->
+
+</body>
+</html>
